@@ -14,7 +14,7 @@ import qdarkstyle
 class MyCustomPyQt(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowIcon(QIcon(utils.resource_path(str(Path("Data") / "ico" / "Spiriponzelli_allower.ico"))))
+        self.setWindowIcon(QIcon(utils.resource_path(str(Path("Data") / "ico" / "app.ico"))))
 
     def applyDarkPalette(self):
         #qdarkstyle + some override

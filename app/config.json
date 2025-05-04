@@ -1,4 +1,4 @@
 {
     "pebbleAPI": "your_pebbel_api",
-    "server": "your_server_id"
+    "server": "your_pebbel_api"
 }

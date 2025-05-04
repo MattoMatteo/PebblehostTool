@@ -5,7 +5,7 @@ import sys
 import json
 import io
 
-with open(utils.resource_path(str(Path("config.json"))), 'r', encoding='utf-8') as file:
+with open(utils.resource_path(str(Path("config.json")), internal_data = False), 'r', encoding='utf-8') as file:
     config = json.load(file)
 
 pebbleAPI = config["pebbleAPI"]
@@ -26,9 +26,12 @@ def check_internet():
         return False
     
 def test_credentials()->bool:
-    api_call = host + f"/api/client/servers/{server}"
-    response = requests.get(api_call, headers=headers)
-    return response.ok
+    try:
+        api_call = host + f"/api/client/servers/{server}"
+        response = requests.get(api_call, headers=headers).json()
+        return True
+    except Exception as e:
+        return False
 
 #Client API
 
