@@ -34,8 +34,6 @@ Once you're done editing, clicking the **Save** button will:
 
 This design ensures that only the IPs explicitly added via the tool are allowed access — making the software ideal for controlled access environments.
 
-*(insert image showing the save confirmation or edited rule being saved)*
-
 ### Restoring the Original State
 
 If you make a mistake or want to revert your changes, you can click the **Restore View** button to reload the current firewall state from the server without applying any unsaved modifications.
