@@ -32,7 +32,7 @@
    <enum>Qt::ClickFocus</enum>
   </property>
   <property name="windowTitle">
-   <string>Spiriponzelli Allower</string>
+   <string>PebbleHostTool</string>
   </property>
   <property name="accessibleName">
    <string/>
