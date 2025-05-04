@@ -1,17 +1,7 @@
 import pebblehostAPI
-import sys
-import os
 import ipaddress
 import winreg
 import platform
-
-def resource_path(relative_path):
-    """Used to create a single executable file with pyinstaller except for config.json"""
-    if hasattr(sys, '_MEIPASS'):
-        base_path = sys._MEIPASS  # PyInstaller executable
-    else:
-        base_path = os.path.abspath(".")  # Normal execution
-    return os.path.join(base_path, relative_path)
 
 def is_a_valid_ipv4_cidr(ip:str)->bool:
     try:
@@ -29,8 +19,6 @@ def is_a_valid_ipv4_cidr(ip:str)->bool:
         return False
 
 class Firewall():
-    def __init__(self):
-        self.import_firewall_data()
 
     def import_firewall_data(self)->list[dict]:
         fileName = "my_firewall_rules.json"
@@ -93,11 +81,12 @@ class Firewall():
         priority = 2
         for rule in self.rules:
             if rule["IP Address"] != "0.0.0.0/0":
-                rule["Priority"] = priority
+                rule["Priority"] = str(priority)
                 pebblehostAPI.add_firewallRule(ip=rule["IP Address"], port=int(rule["Port"]), priority=rule["Priority"], allow = rule["Action"])
                 priority+=1
         #Upload del file jason
         file_to_upload = {}
+        file_to_upload["1"] = ""
         for rule in self.rules:
             file_to_upload[rule["Priority"]] = rule["Name"]
         pebblehostAPI.fileManager_uploadData(file_to_upload)

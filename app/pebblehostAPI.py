@@ -1,10 +1,11 @@
 import requests
 from pathlib import Path
+import utils
 import sys
 import json
 import io
 
-with open(str(Path("config.json")), 'r', encoding='utf-8') as file:
+with open(utils.resource_path(str(Path("config.json"))), 'r', encoding='utf-8') as file:
     config = json.load(file)
 
 pebbleAPI = config["pebbleAPI"]
@@ -15,7 +16,24 @@ headers = {
     'Authorization': f'Bearer {pebbleAPI}',
 }
 
-my_public_ip = requests.get(host + "/api/client/myip", headers={'Authorization': f'Bearer {pebbleAPI}', 'accept': 'text/plain'}).text
+#Test api / server id
+
+def check_internet():
+    try:
+        response = requests.get(host, timeout=5)
+        return True
+    except requests.ConnectionError:
+        return False
+    
+def test_credentials()->bool:
+    api_call = host + f"/api/client/servers/{server}"
+    response = requests.get(api_call, headers=headers)
+    return response.ok
+
+#Client API
+
+def get_publicIP():
+    return requests.get(host + "/api/client/myip", headers={'Authorization': f'Bearer {pebbleAPI}', 'accept': 'text/plain'}).text
 
 #Firewall API
 

@@ -5,6 +5,7 @@ from PyQt5.QtCore import Qt, QSize, QThread, pyqtSignal, QObject , QCoreApplicat
 import pebblehostAPI
 from pathlib import Path
 import logic
+import utils
 import ctypes
 import qdarkstyle
 
@@ -13,7 +14,7 @@ import qdarkstyle
 class MyCustomPyQt(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowIcon(QIcon(logic.resource_path(str(Path("Data") / "ico" / "Spiriponzelli_allower.ico"))))
+        self.setWindowIcon(QIcon(utils.resource_path(str(Path("Data") / "ico" / "Spiriponzelli_allower.ico"))))
 
     def applyDarkPalette(self):
         #qdarkstyle + some override
@@ -97,7 +98,7 @@ class MainWindow(QMainWindow, MyCustomPyQt):
 
     def __init__(self):
         super().__init__()
-        PyQt5.uic.loadUi(logic.resource_path(str(Path("Data") / "ui_template" / "main_gui.ui")), self)
+        PyQt5.uic.loadUi(utils.resource_path(str(Path("Data") / "ui_template" / "main_gui.ui")), self)
         if logic.is_windows() and logic.windows_dark_mode_enabled():
             self.applyDarkPalette()
         self.edit_delete_size = QSize(70,30)
@@ -110,15 +111,15 @@ class MainWindow(QMainWindow, MyCustomPyQt):
         self.label_IP:QLabel
 
         #Post modify QWidget
-        self.pushButton_Salva.init(logic.resource_path(str(Path("Data") / "ico" / "save.png")),
+        self.pushButton_Salva.init(utils.resource_path(str(Path("Data") / "ico" / "save.png")),
                                                                  QSize(self.pushButton_Salva.width(), self.pushButton_Salva.height()))                                                     
         self.pushButton_Salva.clicked.connect(self.save_clicked)
 
-        self.pushButton_addRule.init((logic.resource_path(str(Path("Data") / "ico" / "add_rule.png"))),
+        self.pushButton_addRule.init((utils.resource_path(str(Path("Data") / "ico" / "add_rule.png"))),
                                      QSize(self.pushButton_addRule.width(), self.pushButton_addRule.height()))
         self.pushButton_addRule.clicked.connect(self.addRule_click)
 
-        self.pushButton_ripristina.init(logic.resource_path(str(Path("Data") / "ico" / "restore.png")),
+        self.pushButton_ripristina.init(utils.resource_path(str(Path("Data") / "ico" / "restore.png")),
                                         QSize(self.pushButton_ripristina.width(), self.pushButton_ripristina.height()))
         self.pushButton_ripristina.clicked.connect(self.restore_from_db)
         
@@ -168,7 +169,7 @@ class MainWindow(QMainWindow, MyCustomPyQt):
                 self.tableWidget_rules.setItem(i, self.get_columnIndex_tableWidget_byName(self.tableWidget_rules, "Edit"), item)
             else:
                 item = QPushButtonWithIcon()
-                item.init(logic.resource_path(str(Path("Data") / "ico" / "edit.png")),
+                item.init(utils.resource_path(str(Path("Data") / "ico" / "edit.png")),
                                                          self.edit_delete_size)
                 
                 item.clicked.connect(lambda x, r=i: self.edit_clicked(r))
@@ -180,7 +181,7 @@ class MainWindow(QMainWindow, MyCustomPyQt):
                 self.tableWidget_rules.setItem(i, self.get_columnIndex_tableWidget_byName(self.tableWidget_rules, "Delete"), item)
             else:
                 item = QPushButtonWithIcon()
-                item.init(logic.resource_path(str(Path("Data") / "ico" / "delete.png")),
+                item.init(utils.resource_path(str(Path("Data") / "ico" / "delete.png")),
                                                          self.edit_delete_size)
                 item.clicked.connect(lambda x, r=i: self.delete_clicked(r))
                 self.tableWidget_rules.setCellWidget(i, self.get_columnIndex_tableWidget_byName(self.tableWidget_rules, "Delete"), item)
@@ -236,10 +237,10 @@ class MainWindow(QMainWindow, MyCustomPyQt):
         self.update_table()
 
     def update_ipLabel(self):
-        if self.checkIpAllowed(pebblehostAPI.my_public_ip):
-            self.label_IP.setText("Your public ip: " + pebblehostAPI.my_public_ip + "\t" + '<span style="color: green;">ALLOW</span>')
+        if self.checkIpAllowed(pebblehostAPI.get_publicIP()):
+            self.label_IP.setText("Your public ip: " + pebblehostAPI.get_publicIP() + "\t" + '<span style="color: green;">ALLOW</span>')
         else:
-            self.label_IP.setText("Your public ip: " + pebblehostAPI.my_public_ip + "\t" + '<span style="color: red;">BLOCK</span>')
+            self.label_IP.setText("Your public ip: " + pebblehostAPI.get_publicIP() + "\t" + '<span style="color: red;">BLOCK</span>')
 
     def checkIpAllowed(self, ip:str)->bool:
         for rule in logic.firewall.rules:
@@ -251,7 +252,7 @@ class AddRuleWindow(QDialog, MyCustomPyQt):
 
     def __init__(self, row:int=None, name:str="", ip:str="", port:str="25578", action:str="Allow"):
         super().__init__()
-        PyQt5.uic.loadUi(logic.resource_path(str(Path("Data") / "ui_template" / "add_rule.ui")), self)
+        PyQt5.uic.loadUi(utils.resource_path(str(Path("Data") / "ui_template" / "add_rule.ui")), self)
         if logic.is_windows() and logic.windows_dark_mode_enabled():
             self.applyDarkPalette()
         self.row = row
@@ -325,13 +326,13 @@ class AddRuleWindow(QDialog, MyCustomPyQt):
             self.done(1)
      
     def use_my_ip(self):
-        self.lineEdit_IP_Address.setText(pebblehostAPI.my_public_ip)
+        self.lineEdit_IP_Address.setText(pebblehostAPI.get_publicIP())
 
 class InfoBox(QDialog, MyCustomPyQt):
 
     def __init__(self, message:str):
         super().__init__()
-        PyQt5.uic.loadUi(logic.resource_path(str(Path("Data") / "ui_template" / "info_box.ui")), self)
+        PyQt5.uic.loadUi(utils.resource_path(str(Path("Data") / "ui_template" / "info_box.ui")), self)
         
         #Esplicate some object in main_gui.ui
         self.label_Message:QLabel

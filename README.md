@@ -75,7 +75,7 @@ pip install -r requirements.txt
 4.Build the executable with PyInstaller:
 
 ```bash
-pyinstaller --onefile --noconsole --icon=Data/ico/app.ico --add-data "Data/ico;Data/ico" --add-data "Data/ui_template;Data/ui_template" main.py
+pyinstaller --onefile --noconsole --icon=app/Data/ico/app.ico --add-data "app/Data/ico;Data/ico" --add-data "app/Data/ui_template;Data/ui_template" app/main.py
 ```
 The final executable will be available in the dist/ folder. The config.json file must be placed alongside the .exe for the application to function correctly.
 
