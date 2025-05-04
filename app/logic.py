@@ -88,7 +88,8 @@ class Firewall():
         file_to_upload = {}
         file_to_upload["1"] = ""
         for rule in self.rules:
-            file_to_upload[rule["Priority"]] = rule["Name"]
+            if rule["IP Address"] != "0.0.0.0/0":
+                file_to_upload[rule["Priority"]] = rule["Name"]
         pebblehostAPI.fileManager_uploadData(file_to_upload)
 
 firewall = Firewall()
