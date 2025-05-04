@@ -89,8 +89,13 @@ class Firewall():
 
     def upload_firewall_data(self):
         pebblehostAPI.delete_firewallRule()
+        pebblehostAPI.add_firewallRule(ip="0.0.0.0/0", port=25578, priority=1, allow = False)
+        priority = 2
         for rule in self.rules:
-            pebblehostAPI.add_firewallRule(ip=rule["IP Address"], port=int(rule["Port"]), priority=rule["Priority"], allow = rule["Action"])
+            if rule["IP Address"] != "0.0.0.0/0":
+                rule["Priority"] = priority
+                pebblehostAPI.add_firewallRule(ip=rule["IP Address"], port=int(rule["Port"]), priority=rule["Priority"], allow = rule["Action"])
+                priority+=1
         #Upload del file jason
         file_to_upload = {}
         for rule in self.rules:

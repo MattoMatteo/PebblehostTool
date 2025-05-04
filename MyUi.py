@@ -229,6 +229,7 @@ class MainWindow(QMainWindow, MyCustomPyQt):
 
         self.my_thread.start()
         dialog.exec_()
+        self.restore_from_db()
 
     def restore_from_db(self):
         logic.firewall.import_firewall_data()
